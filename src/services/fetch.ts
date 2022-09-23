@@ -1,10 +1,10 @@
-const Fetch = async(url: string) => {
+const fetchData = async(url: string) => {
     try{
-        const responce = await fetch(url);
-        if (!responce.ok){
-            throw new Error(`HTTP Error, with status: ${responce.status}`);
+        const response = await fetch(url);
+        if (!response.ok){
+            throw new Error(`HTTP Error, with status: ${response.status}`);
         }
-        const data = await responce.json();
+        const data = await response.json();
         return data;
     
     }catch(error){
@@ -18,4 +18,4 @@ const Fetch = async(url: string) => {
     }
 }
 
-export default Fetch;
+export default fetchData;

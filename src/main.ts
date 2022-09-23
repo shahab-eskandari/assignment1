@@ -1,23 +1,22 @@
-import Fetch from "./services/fetch";
+import fetchData from "./services/fetch";
 import {FinalResult} from './types/FinalResult'
 
 let finalResult: FinalResult[] = [];
 
-const createArray = async(url: string) => {
+const changeResult = async(url: string) => {
   
-  const episodes = await Fetch(url);
- 
+  const episodes = await fetchData(url);
+
   for(let i=0 ; i < episodes.results.length ; i++ ){
-      for(let j=0 ; j < episodes.results[i].characters.length ; j++){
-          const characterObject = await Fetch(episodes.results[i].characters[j]);
-          episodes.results[i].characters[j] = characterObject;
-      }   
+    for(let j=0 ; j < episodes.results[i].characters.length ; j++){
+      episodes.results[i].characters[j] = await fetchData(episodes.results[i].characters[j]);
+    }   
   }
 
   finalResult = [...finalResult, ...episodes.results];
 
   if(episodes.info.next !== null){
-    createArray(episodes.info.next)
+    changeResult(episodes.info.next)
   }
   
   if(episodes.info.count === finalResult.length){
@@ -25,4 +24,4 @@ const createArray = async(url: string) => {
   }
 }
 
-createArray("https://rickandmortyapi.com/api/episode");
+changeResult("https://rickandmortyapi.com/api/episode");
